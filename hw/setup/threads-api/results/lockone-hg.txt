@@ -1,0 +1,69 @@
+==483== Helgrind, a thread error detector
+==483== Copyright (C) 2007-2024, and GNU GPL'd, by OpenWorks LLP et al.
+==483== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==483== Command: ./main-race-lockone
+==483== 
+==483== ---Thread-Announcement------------------------------------------
+==483== 
+==483== Thread #1 is the program's root thread
+==483== 
+==483== ---Thread-Announcement------------------------------------------
+==483== 
+==483== Thread #2 was created
+==483==    at 0x49AD3C3: clone (clone.S:76)
+==483==    by 0x49AD53E: __clone_internal_fallback (clone-internal.c:64)
+==483==    by 0x49AD53E: __clone_internal (clone-internal.c:109)
+==483==    by 0x4919904: create_thread (pthread_create.c:298)
+==483==    by 0x491A62D: pthread_create@@GLIBC_2.34 (pthread_create.c:863)
+==483==    by 0x4860743: pthread_create_WRK (hg_intercepts.c:449)
+==483==    by 0x40012BD: main (main-race-lockone.c:17)
+==483== 
+==483== ----------------------------------------------------------------
+==483== 
+==483==  Lock at 0x4004060 was first observed
+==483==    at 0x485D0AA: mutex_lock_WRK (hg_intercepts.c:1003)
+==483==    by 0x4001207: worker (main-race-lockone.c:9)
+==483==    by 0x486094A: mythread_wrapper (hg_intercepts.c:410)
+==483==    by 0x4919DF9: start_thread (pthread_create.c:454)
+==483==    by 0x49AD3D3: clone (clone.S:100)
+==483==  Address 0x4004060 is 0 bytes inside data symbol "lock"
+==483== 
+==483== Possible data race during read of size 4 at 0x4004040 by thread #1
+==483== Locks held: none
+==483==    at 0x40012E7: main (main-race-lockone.c:18)
+==483== 
+==483== This conflicts with a previous write of size 4 by thread #2
+==483== Locks held: 1, at address 0x4004060
+==483==    at 0x400123A: worker (main-race-lockone.c:10)
+==483==    by 0x486094A: mythread_wrapper (hg_intercepts.c:410)
+==483==    by 0x4919DF9: start_thread (pthread_create.c:454)
+==483==    by 0x49AD3D3: clone (clone.S:100)
+==483==  Address 0x4004040 is 0 bytes inside data symbol "balance"
+==483== 
+==483== ----------------------------------------------------------------
+==483== 
+==483==  Lock at 0x4004060 was first observed
+==483==    at 0x485D0AA: mutex_lock_WRK (hg_intercepts.c:1003)
+==483==    by 0x4001207: worker (main-race-lockone.c:9)
+==483==    by 0x486094A: mythread_wrapper (hg_intercepts.c:410)
+==483==    by 0x4919DF9: start_thread (pthread_create.c:454)
+==483==    by 0x49AD3D3: clone (clone.S:100)
+==483==  Address 0x4004060 is 0 bytes inside data symbol "lock"
+==483== 
+==483== Possible data race during write of size 4 at 0x4004040 by thread #1
+==483== Locks held: none
+==483==    at 0x40012F0: main (main-race-lockone.c:18)
+==483== 
+==483== This conflicts with a previous write of size 4 by thread #2
+==483== Locks held: 1, at address 0x4004060
+==483==    at 0x400123A: worker (main-race-lockone.c:10)
+==483==    by 0x486094A: mythread_wrapper (hg_intercepts.c:410)
+==483==    by 0x4919DF9: start_thread (pthread_create.c:454)
+==483==    by 0x49AD3D3: clone (clone.S:100)
+==483==  Address 0x4004040 is 0 bytes inside data symbol "balance"
+==483== 
+==483== 
+==483== Use --history-level=approx or =none to gain increased speed, at
+==483== the cost of reduced accuracy of conflicting-access information
+==483== For lists of detected and suppressed errors, rerun with: -s
+==483== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 1 from 1)
